@@ -59,8 +59,8 @@ export default function handler(req, res) {
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}">
   <defs>
-    <filter id="shadow" x="-5%" y="-10%" width="115%" height="130%">
-      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+    <filter id="shadow" x="0%" y="0%" width="105%" height="105%">
+      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
     </filter>
     <linearGradient id="buttonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="${lightColor}"/>

@@ -8,8 +8,8 @@ function lightenColor(hex, percent) {
 }
 
 export default function handler(req, res) {
-  const text = req.query.text || "Читать далее";
-  const rawColor = req.query.color || "2a2a2a";
+  const text = req.query.text || "Error: Parameter \"text\" is empty.";
+  const rawColor = req.query.color || "0a0a0a";
 
   const rawStroke = req.query.stroke || "000000";
   const strokeWidth = req.query.weight || "2";
@@ -29,7 +29,7 @@ export default function handler(req, res) {
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} 60" width="100%" height="100%">
   <defs>
-    <filter id="shadow" x="-5%" y="-10%" width="115%" height="130%">
+    <filter id="shadow" x="0%" y="0%" width="115%" height="130%">
       <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
     </filter>
     <linearGradient id="buttonGrad" x1="0%" y1="0%" x2="0%" y2="100%">

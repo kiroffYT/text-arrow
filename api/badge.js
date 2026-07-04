@@ -8,10 +8,18 @@ function lightenColor(hex, percent) {
 }
 
 export default function handler(req, res) {
-  const text = req.query.text || "Error: Parameter \"text\" is empty.";
+  const text = req.query.text || "Читать далее";
   const rawColor = req.query.color || "2a2a2a";
   const rawStroke = req.query.stroke || "000000";
   const strokeWidth = parseFloat(req.query.weight) || 2; 
+
+  const targetHeight = parseFloat(req.query.height) || 60;
+
+  const BASE_HEIGHT = 60;
+  const BASE_FONT_SIZE = 28;
+  const BASE_CHAR_WIDTH = 15;
+
+  const scale = targetHeight / BASE_HEIGHT;
 
   const mainColor = `#${rawColor.replace('#', '')}`;
   const strokeColor = `#${rawStroke.replace('#', '')}`;
@@ -19,35 +27,37 @@ export default function handler(req, res) {
 
   const offset = strokeWidth / 2;
 
-  const charWidth = 15; 
+  const fontSize = Math.round(BASE_FONT_SIZE * scale);
+  const charWidth = BASE_CHAR_WIDTH * scale;
+
   const textLength = text.length * charWidth;
-  const baseWidth = Math.max(180, Math.round(textLength + 90));
-  const baseHeight = 60;
+  const baseWidth = Math.max(180 * scale, Math.round(textLength + (90 * scale)));
 
   const totalWidth = baseWidth + strokeWidth;
-  const totalHeight = baseHeight + strokeWidth;
+  const totalHeight = targetHeight + strokeWidth;
 
-  const topY = 5 + offset;
-  const bottomY = 55 + offset;
-  const leftX = 5 + offset;
+  const topY = (5 * scale) + offset;
+  const bottomY = ((BASE_HEIGHT - 5) * scale) + offset;
+  const centerY = (30 * scale) + offset;
+  const leftX = (5 * scale) + offset;
   
-  const arrowStartX = baseWidth - 30 + offset;
-  const arrowTipX = baseWidth - 5 + offset;
-
-  const radius = 10;
+  const arrowStartX = baseWidth - (30 * scale) + offset;
+  const arrowTipX = baseWidth - (5 * scale) + offset;
+  
+  const radius = 10 * scale;
   const textX = Math.round((arrowStartX + leftX) / 2);
-  const textY = 40 + offset;
+  const textY = (40 * scale) + offset;
 
   const pathD = `M ${leftX + radius},${topY} ` +
                 `L ${arrowStartX},${topY} ` +
-                `L ${arrowTipX},30 ` +
+                `L ${arrowTipX},${centerY} ` +
                 `L ${arrowStartX},${bottomY} ` +
                 `L ${leftX + radius},${bottomY} ` +
                 `A ${radius},${radius} 0 0,1 ${leftX},${bottomY - radius} ` +
                 `L ${leftX},${topY + radius} ` +
                 `A ${radius},${radius} 0 0,1 ${leftX + radius},${topY} Z`;
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="100%" height="100%">
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}">
   <defs>
     <filter id="shadow" x="-5%" y="-10%" width="115%" height="130%">
       <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
@@ -62,7 +72,7 @@ export default function handler(req, res) {
         stroke="${strokeColor}" 
         stroke-width="${strokeWidth}" 
         filter="url(#shadow)"/>
-  <text x="${textX}" y="${textY}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">${text}</text>
+  <text x="${textX}" y="${textY}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="${fontSize}" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">${text}</text>
 </svg>`;
 
   res.setHeader('Content-Type', 'image/svg+xml');

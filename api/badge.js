@@ -8,7 +8,7 @@ function lightenColor(hex, percent) {
 }
 
 export default function handler(req, res) {
-  const text = req.query.text || "Читать далее";
+  const text = req.query.text || "Error: Parameter \"text\" is empty.";
   const rawColor = req.query.color || "2a2a2a";
   const rawStroke = req.query.stroke || "000000";
   const strokeWidth = parseFloat(req.query.weight) || 2; 

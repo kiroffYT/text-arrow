@@ -25,7 +25,8 @@ export default function handler(req, res) {
   const strokeColor = `#${rawStroke.replace('#', '')}`;
   const lightColor = lightenColor(mainColor, 10); 
 
-  const offset = strokeWidth / 2;
+  const PADDING = 6; 
+  const offset = (strokeWidth / 2) + PADDING;
 
   const fontSize = Math.round(BASE_FONT_SIZE * scale);
   const charWidth = BASE_CHAR_WIDTH * scale;
@@ -33,14 +34,14 @@ export default function handler(req, res) {
   const textLength = text.length * charWidth;
   const baseWidth = Math.max(180 * scale, Math.round(textLength + (90 * scale)));
 
-  const totalWidth = baseWidth + strokeWidth;
-  const totalHeight = targetHeight + strokeWidth;
+  const totalWidth = baseWidth + strokeWidth + (PADDING * 2);
+  const totalHeight = targetHeight + strokeWidth + (PADDING * 2);
 
   const topY = (5 * scale) + offset;
   const bottomY = ((BASE_HEIGHT - 5) * scale) + offset;
   const centerY = (30 * scale) + offset;
   const leftX = (5 * scale) + offset;
-  
+
   const arrowStartX = baseWidth - (30 * scale) + offset;
   const arrowTipX = baseWidth - (5 * scale) + offset;
   
@@ -59,7 +60,7 @@ export default function handler(req, res) {
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}">
   <defs>
-    <filter id="shadow" x="0%" y="0%" width="105%" height="105%">
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
     </filter>
     <linearGradient id="buttonGrad" x1="0%" y1="0%" x2="0%" y2="100%">

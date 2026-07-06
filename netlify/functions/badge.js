@@ -7,13 +7,15 @@ function lightenColor(hex, percent) {
   return "#" + (0x1000000 + (R<255?R<0?0:R:255)*0x10000 + (G<255?G<0?0:G:255)*0x100 + (B<255?B<0?0:B:255)).toString(16).slice(1);
 }
 
-export default function handler(req, res) {
-  const text = req.query.text || "Читать далее";
-  const rawColor = req.query.color || "2a2a2a";
-  const rawStroke = req.query.stroke || "000000";
-  const strokeWidth = parseFloat(req.query.weight) || 2; 
+export const handler = async (event, context) => {
+  const query = event.queryStringParameters || {};
+  
+  const text = query.text || "Читать далее";
+  const rawColor = query.color || "2a2a2a";
+  const rawStroke = query.stroke || "000000";
+  const strokeWidth = parseFloat(query.weight) || 2; 
 
-  const targetHeight = parseFloat(req.query.height) || 60;
+  const targetHeight = parseFloat(query.height) || 60;
 
   const BASE_HEIGHT = 60;
   const BASE_FONT_SIZE = 28;
@@ -76,7 +78,12 @@ export default function handler(req, res) {
   <text x="${textX}" y="${textY}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="${fontSize}" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">${text}</text>
 </svg>`;
 
-  res.setHeader('Content-Type', 'image/svg+xml');
-  res.setHeader('Cache-Control', 'max-age=0, s-maxage=86400, stale-while-revalidate');
-  return res.status(200).send(svg);
-}
+  return {
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'max-age=0, s-maxage=86400, stale-while-revalidate'
+    },
+    body: svg
+  };
+};
